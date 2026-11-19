@@ -5,15 +5,15 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/output"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/output"
 )
 
 var userCmd = &cobra.Command{
 	Use:   "user",
 	Short: "Manage users",
-	Example: `  qemu-cli user list
-  qemu-cli -o json user list`,
+	Example: `  qcli user list
+  qcli -o json user list`,
 }
 
 func init() {

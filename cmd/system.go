@@ -5,15 +5,15 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/output"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/output"
 )
 
 var serverInfoCmd = &cobra.Command{
 	Use:   "server-info",
 	Short: "Show host system status (CPU, RAM, Disk)",
-	Example: `  qemu-cli server-info
-  qemu-cli -o json server-info`,
+	Example: `  qcli server-info
+  qcli -o json server-info`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := clientFromActive()
 		if err != nil {
@@ -70,9 +70,9 @@ var completionCmd = &cobra.Command{
 	Long: `Generate completion script for your shell.
 
 Examples:
-  qemu-cli completion zsh
-  qemu-cli completion bash > /etc/bash_completion.d/qemu-cli
-  qemu-cli completion fish > ~/.config/fish/completions/qemu-cli.fish`,
+  qcli completion zsh
+  qcli completion bash > /etc/bash_completion.d/qcli
+  qcli completion fish > ~/.config/fish/completions/qcli.fish`,
 	Args:      cobra.ExactArgs(1),
 	ValidArgs: []string{"bash", "zsh", "fish", "powershell"},
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -86,7 +86,7 @@ Examples:
 		case "powershell":
 			return rootCmd.GenPowerShellCompletionWithDesc(cmd.OutOrStdout())
 		default:
-			return fmt.Errorf("unsupported shell %q\n  qemu-cli completion zsh", args[0])
+			return fmt.Errorf("unsupported shell %q\n  qcli completion zsh", args[0])
 		}
 	},
 }

@@ -1,4 +1,4 @@
-// Package config stores multi-server contexts in ~/.qemu-cli/config.json.
+// Package config stores multi-server contexts in ~/.qcli/config.json.
 package config
 
 import (
@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	DirName  = ".qemu-cli"
-	FileName = "config.json"
+	DirName       = ".qcli"
+	LegacyDirName = ".qemu-cli" // pre-rename config location
+	FileName      = "config.json"
 )
 
 // Context is one panel connection (URL + API key + optional tenant).
@@ -36,6 +37,15 @@ func configPath() (string, error) {
 	return filepath.Join(home, DirName, FileName), nil
 }
 
+
+func legacyConfigPath() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(home, LegacyDirName, FileName), nil
+}
+
 func ensureDir() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -48,7 +58,8 @@ func ensureDir() (string, error) {
 	return dir, nil
 }
 
-// Load reads ~/.qemu-cli/config.json (empty config on missing/invalid file).
+// Load reads ~/.qcli/config.json (empty config on missing/invalid file).
+// Falls back to ~/.qemu-cli/config.json once and migrates it into ~/.qcli.
 func Load() (*File, error) {
 	path, err := configPath()
 	if err != nil {
@@ -56,10 +67,24 @@ func Load() (*File, error) {
 	}
 	data, err := os.ReadFile(path)
 	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
+		if !errors.Is(err, os.ErrNotExist) {
+			return nil, err
+		}
+		legacy, lerr := legacyConfigPath()
+		if lerr != nil {
 			return &File{Contexts: map[string]Context{}}, nil
 		}
-		return nil, err
+		data, err = os.ReadFile(legacy)
+		if err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				return &File{Contexts: map[string]Context{}}, nil
+			}
+			return nil, err
+		}
+		// Best-effort migration to the new path.
+		if _, serr := ensureDir(); serr == nil {
+			_ = os.WriteFile(path, data, 0o600)
+		}
 	}
 	if len(data) == 0 {
 		return &File{Contexts: map[string]Context{}}, nil
@@ -99,11 +124,11 @@ func Active() (name string, ctx Context, err error) {
 	}
 	name = cfg.ActiveContext
 	if name == "" {
-		return "", Context{}, fmt.Errorf("no active context\n  qemu-cli context create <name> --url <url> --token <qi_...>")
+		return "", Context{}, fmt.Errorf("no active context\n  qcli context create <name> --url <url> --token <qi_...>")
 	}
 	ctx, ok := cfg.Contexts[name]
 	if !ok {
-		return "", Context{}, fmt.Errorf("context %q not found\n  qemu-cli context list", name)
+		return "", Context{}, fmt.Errorf("context %q not found\n  qcli context list", name)
 	}
 	return name, ctx, nil
 }
@@ -124,7 +149,7 @@ func TenantID() (string, error) {
 		return "", err
 	}
 	if ctx.TenantID == "" {
-		return "", fmt.Errorf("no tenant selected\n  qemu-cli tenant list\n  qemu-cli tenant use <id|name>")
+		return "", fmt.Errorf("no tenant selected\n  qcli tenant list\n  qcli tenant use <id|name>")
 	}
 	return ctx.TenantID, nil
 }
@@ -137,7 +162,7 @@ func SetTenantID(tenantID string) error {
 	}
 	name := cfg.ActiveContext
 	if name == "" {
-		return fmt.Errorf("no active context\n  qemu-cli context create <name> --url <url> --token <qi_...>")
+		return fmt.Errorf("no active context\n  qcli context create <name> --url <url> --token <qi_...>")
 	}
 	ctx, ok := cfg.Contexts[name]
 	if !ok {

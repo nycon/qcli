@@ -1,7 +1,7 @@
-APP      := qemu-cli
-VERSION  := 1.1.0
+APP      := qcli
+VERSION  := 1.2.0
 BIN_DIR  := bin
-LDFLAGS  := -ldflags "-X github.com/nycon/qemu-cli/cmd.Version=$(VERSION)"
+LDFLAGS  := -ldflags "-X github.com/nycon/qcli/cmd.Version=$(VERSION)"
 
 .PHONY: build install clean test smoke tidy release-binaries
 

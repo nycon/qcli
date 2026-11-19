@@ -6,17 +6,17 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/config"
-	"github.com/nycon/qemu-cli/internal/output"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/config"
+	"github.com/nycon/qcli/internal/output"
 )
 
 var ipPoolCmd = &cobra.Command{
 	Use:   "ip-pool",
 	Short: "List IP pools and free public IPs",
-	Example: `  qemu-cli ip-pool list
-  qemu-cli ip-pool available
-  qemu-cli -o json ip-pool available`,
+	Example: `  qcli ip-pool list
+  qcli ip-pool available
+  qcli -o json ip-pool available`,
 }
 
 func init() {
@@ -28,7 +28,7 @@ func init() {
 var ipPoolListCmd = &cobra.Command{
 	Use:     "list",
 	Short:   "List IP pools visible for the active tenant (or all for superadmin)",
-	Example: `  qemu-cli ip-pool list`,
+	Example: `  qcli ip-pool list`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := clientFromActive()
 		if err != nil {
@@ -73,8 +73,8 @@ var ipPoolListCmd = &cobra.Command{
 var ipPoolAvailableCmd = &cobra.Command{
 	Use:   "available",
 	Short: "List free public IPs assignable to tenants (superadmin)",
-	Example: `  qemu-cli ip-pool available
-  qemu-cli -o json ip-pool available`,
+	Example: `  qcli ip-pool available
+  qcli -o json ip-pool available`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := clientFromActive()
 		if err != nil {

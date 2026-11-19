@@ -8,9 +8,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/config"
-	"github.com/nycon/qemu-cli/internal/output"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/config"
+	"github.com/nycon/qcli/internal/output"
 )
 
 var contextCmd = &cobra.Command{
@@ -19,10 +19,10 @@ var contextCmd = &cobra.Command{
 	Long: `Manage panel connections (URL + API key).
 
 Examples:
-  qemu-cli context create production --url https://panel.example.com --token qiqi_...
-  qemu-cli context list
-  qemu-cli context use production
-  qemu-cli context active`,
+  qcli context create production --url https://panel.example.com --token qiqi_...
+  qcli context list
+  qcli context use production
+  qcli context active`,
 }
 
 func init() {
@@ -43,8 +43,8 @@ var contextCreateCmd = &cobra.Command{
 	Use:   "create [name]",
 	Short: "Create a new server context",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli context create production --url https://panel.example.com --token qiqi_abc
-  qemu-cli context create staging --url https://staging.example.com --token qiqi_... --insecure`,
+	Example: `  qcli context create production --url https://panel.example.com --token qiqi_abc
+  qcli context create staging --url https://staging.example.com --token qiqi_... --insecure`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
 		url := strings.TrimSpace(ctxURL)
@@ -61,7 +61,7 @@ var contextCreateCmd = &cobra.Command{
 			token = strings.TrimSpace(line)
 		}
 		if url == "" || token == "" {
-			return fmt.Errorf("url and token are required\n  qemu-cli context create %s --url <url> --token <qi_...>", name)
+			return fmt.Errorf("url and token are required\n  qcli context create %s --url <url> --token <qi_...>", name)
 		}
 		url = strings.TrimRight(url, "/")
 		insecure := ctxInsecure || insecureFlag
@@ -122,15 +122,15 @@ func init() {
 var contextListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all contexts",
-	Example: `  qemu-cli context list
-  qemu-cli -o json context list`,
+	Example: `  qcli context list
+  qcli -o json context list`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := config.Load()
 		if err != nil {
 			return err
 		}
 		if len(cfg.Contexts) == 0 {
-			fmt.Fprintln(os.Stderr, "No contexts configured. Run: qemu-cli context create <name> --url <url> --token <qi_...>")
+			fmt.Fprintln(os.Stderr, "No contexts configured. Run: qcli context create <name> --url <url> --token <qi_...>")
 			return nil
 		}
 		rows := [][]string{}
@@ -149,7 +149,7 @@ var contextUseCmd = &cobra.Command{
 	Use:   "use [name]",
 	Short: "Switch the active context",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli context use production`,
+	Example: `  qcli context use production`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
 		cfg, err := config.Load()
@@ -157,7 +157,7 @@ var contextUseCmd = &cobra.Command{
 			return err
 		}
 		if _, ok := cfg.Contexts[name]; !ok {
-			return fmt.Errorf("context %q not found\n  qemu-cli context list", name)
+			return fmt.Errorf("context %q not found\n  qcli context list", name)
 		}
 		cfg.ActiveContext = name
 		if err := config.Save(cfg); err != nil {
@@ -171,7 +171,7 @@ var contextDeleteCmd = &cobra.Command{
 	Use:   "delete [name]",
 	Short: "Delete a context",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli context delete staging`,
+	Example: `  qcli context delete staging`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
 		cfg, err := config.Load()
@@ -179,7 +179,7 @@ var contextDeleteCmd = &cobra.Command{
 			return err
 		}
 		if _, ok := cfg.Contexts[name]; !ok {
-			return fmt.Errorf("context %q not found\n  qemu-cli context list", name)
+			return fmt.Errorf("context %q not found\n  qcli context list", name)
 		}
 		delete(cfg.Contexts, name)
 		if cfg.ActiveContext == name {
@@ -199,7 +199,7 @@ var contextDeleteCmd = &cobra.Command{
 var contextActiveCmd = &cobra.Command{
 	Use:   "active",
 	Short: "Show the active context",
-	Example: `  qemu-cli context active`,
+	Example: `  qcli context active`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name, ctx, err := config.Active()
 		if err != nil {

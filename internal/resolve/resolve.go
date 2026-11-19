@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/nycon/qemu-cli/internal/api"
+	"github.com/nycon/qcli/internal/api"
 )
 
 type named struct {
@@ -57,7 +57,7 @@ func VM(c *api.Client, tenantID, partial string) (string, error) {
 	}
 	id, err := match(partial, items)
 	if err != nil {
-		return "", fmt.Errorf("VM not found: %s\n  qemu-cli vm list", partial)
+		return "", fmt.Errorf("VM not found: %s\n  qcli vm list", partial)
 	}
 	return id, nil
 }
@@ -77,7 +77,7 @@ func Image(c *api.Client, partial string) (string, error) {
 	}
 	id, err := match(partial, items)
 	if err != nil {
-		return "", fmt.Errorf("image not found: %s\n  qemu-cli image list", partial)
+		return "", fmt.Errorf("image not found: %s\n  qcli image list", partial)
 	}
 	return id, nil
 }
@@ -98,5 +98,5 @@ func Tenant(c *api.Client, partial string) (id, name string, err error) {
 			return it.ID, it.Name, nil
 		}
 	}
-	return "", "", fmt.Errorf("tenant not found: %s\n  qemu-cli tenant list", partial)
+	return "", "", fmt.Errorf("tenant not found: %s\n  qcli tenant list", partial)
 }

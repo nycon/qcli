@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/nycon/qemu-cli/cmd"
+	"github.com/nycon/qcli/cmd"
 )
 
 func main() {

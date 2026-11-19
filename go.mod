@@ -1,4 +1,4 @@
-module github.com/nycon/qemu-cli
+module github.com/nycon/qcli
 
 go 1.26.5
 

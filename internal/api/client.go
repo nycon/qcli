@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nycon/qemu-cli/internal/config"
+	"github.com/nycon/qcli/internal/config"
 )
 
 const timeout = 30 * time.Second
@@ -57,7 +57,7 @@ type APIError struct {
 
 func (e *APIError) Error() string {
 	if e.Status == 401 {
-		return "authentication failed — check your API token\n  qemu-cli context create <name> --url <url> --token <qi_...>"
+		return "authentication failed — check your API token\n  qcli context create <name> --url <url> --token <qi_...>"
 	}
 	return fmt.Sprintf("API error (%d): %s", e.Status, e.Detail)
 }

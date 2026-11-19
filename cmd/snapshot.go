@@ -5,19 +5,19 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/config"
-	"github.com/nycon/qemu-cli/internal/output"
-	"github.com/nycon/qemu-cli/internal/resolve"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/config"
+	"github.com/nycon/qcli/internal/output"
+	"github.com/nycon/qcli/internal/resolve"
 )
 
 var snapshotCmd = &cobra.Command{
 	Use:   "snapshot",
 	Short: "Manage VM snapshots",
-	Example: `  qemu-cli snapshot list my-vm
-  qemu-cli snapshot create my-vm --name pre-upgrade
-  qemu-cli snapshot restore my-vm pre-upgrade
-  qemu-cli snapshot delete my-vm pre-upgrade`,
+	Example: `  qcli snapshot list my-vm
+  qcli snapshot create my-vm --name pre-upgrade
+  qcli snapshot restore my-vm pre-upgrade
+  qcli snapshot delete my-vm pre-upgrade`,
 }
 
 func init() {

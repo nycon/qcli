@@ -5,19 +5,19 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/config"
-	"github.com/nycon/qemu-cli/internal/output"
-	"github.com/nycon/qemu-cli/internal/resolve"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/config"
+	"github.com/nycon/qcli/internal/output"
+	"github.com/nycon/qcli/internal/resolve"
 )
 
 var backupCmd = &cobra.Command{
 	Use:   "backup",
 	Short: "Manage VM backups",
-	Example: `  qemu-cli backup list my-vm
-  qemu-cli backup create my-vm
-  qemu-cli backup restore my-vm <backup-id> --yes
-  qemu-cli backup delete my-vm <backup-id>`,
+	Example: `  qcli backup list my-vm
+  qcli backup create my-vm
+  qcli backup restore my-vm <backup-id> --yes
+  qcli backup delete my-vm <backup-id>`,
 }
 
 func init() {

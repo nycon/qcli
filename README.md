@@ -1,4 +1,4 @@
-# qemu-cli
+# qcli
 
 Official Go command-line interface for [QEMU Interface](https://github.com/nycon/qemu-wi) panels.
 
@@ -10,39 +10,39 @@ Manage VMs, snapshots, backups, tenants, networks, public IPs, and security from
 
 Download the latest release for your OS from:
 
-**https://github.com/nycon/qemu-cli/releases**
+**https://github.com/nycon/qcli/releases**
 
 | Platform | Archive |
 |---|---|
-| macOS Apple Silicon | `qemu-cli_*_darwin_arm64.tar.gz` |
-| macOS Intel | `qemu-cli_*_darwin_amd64.tar.gz` |
-| Linux x86_64 | `qemu-cli_*_linux_amd64.tar.gz` |
-| Linux ARM64 | `qemu-cli_*_linux_arm64.tar.gz` |
-| Windows x86_64 | `qemu-cli_*_windows_amd64.zip` |
+| macOS Apple Silicon | `qcli_*_darwin_arm64.tar.gz` |
+| macOS Intel | `qcli_*_darwin_amd64.tar.gz` |
+| Linux x86_64 | `qcli_*_linux_amd64.tar.gz` |
+| Linux ARM64 | `qcli_*_linux_arm64.tar.gz` |
+| Windows x86_64 | `qcli_*_windows_amd64.zip` |
 
 Example (macOS Apple Silicon):
 
 ```bash
-curl -fsSL -o qemu-cli.tar.gz \
-  https://github.com/nycon/qemu-cli/releases/latest/download/qemu-cli_1.1.0_darwin_arm64.tar.gz
-tar -xzf qemu-cli.tar.gz
-chmod +x qemu-cli_1.1.0_darwin_arm64
-sudo mv qemu-cli_1.1.0_darwin_arm64 /usr/local/bin/qemu-cli
-qemu-cli version
+curl -fsSL -o qcli.tar.gz \
+  https://github.com/nycon/qcli/releases/latest/download/qcli_1.2.0_darwin_arm64.tar.gz
+tar -xzf qcli.tar.gz
+chmod +x qcli_1.2.0_darwin_arm64
+sudo mv qcli_1.2.0_darwin_arm64 /usr/local/bin/qcli
+qcli version
 ```
 
 ### Build from source
 
 ```bash
-git clone https://github.com/nycon/qemu-cli.git
-cd qemu-cli
+git clone https://github.com/nycon/qcli.git
+cd qcli
 make install
 ```
 
 Or:
 
 ```bash
-go install github.com/nycon/qemu-cli@latest
+go install github.com/nycon/qcli@latest
 ```
 
 Ensure `$(go env GOPATH)/bin` (and optionally `~/.local/bin`) is on your `PATH`.
@@ -53,7 +53,7 @@ Ensure `$(go env GOPATH)/bin` (and optionally `~/.local/bin`) is on your `PATH`.
 2. Create a CLI context:
 
 ```bash
-qemu-cli context create my-server \
+qcli context create my-server \
   --url https://panel.example.com \
   --token qi_your_api_key
 ```
@@ -63,116 +63,116 @@ For self-signed TLS certificates add `--insecure`.
 3. Start managing VMs:
 
 ```bash
-qemu-cli vm list
-qemu-cli vm start my-webserver
+qcli vm list
+qcli vm start my-webserver
 ```
 
 ## Commands
 
 ```
-qemu-cli context create <name>     Create a new server context
-qemu-cli context list              List all contexts
-qemu-cli context use <name>        Switch active context
-qemu-cli context delete <name>     Remove a context
-qemu-cli context active            Show active context
+qcli context create <name>     Create a new server context
+qcli context list              List all contexts
+qcli context use <name>        Switch active context
+qcli context delete <name>     Remove a context
+qcli context active            Show active context
 
-qemu-cli vm list                   List all VMs
-qemu-cli vm create <name>          Create a new VM
-qemu-cli vm describe <id|name>     Show VM details
-qemu-cli vm start <id|name>        Start a VM
-qemu-cli vm stop <id|name>         Gracefully stop a VM
-qemu-cli vm reboot <id|name>       Reboot a VM
-qemu-cli vm poweroff <id|name>     Force power-off a VM
-qemu-cli vm delete <id|name>       Delete a VM
-qemu-cli vm resize <id|name>       Resize CPU/RAM/Disk
+qcli vm list                   List all VMs
+qcli vm create <name>          Create a new VM
+qcli vm describe <id|name>     Show VM details
+qcli vm start <id|name>        Start a VM
+qcli vm stop <id|name>         Gracefully stop a VM
+qcli vm reboot <id|name>       Reboot a VM
+qcli vm poweroff <id|name>     Force power-off a VM
+qcli vm delete <id|name>       Delete a VM
+qcli vm resize <id|name>       Resize CPU/RAM/Disk
 
-qemu-cli snapshot list <vm>        List snapshots
-qemu-cli snapshot create <vm>      Create a snapshot
-qemu-cli snapshot restore <vm> <n> Restore a snapshot
-qemu-cli snapshot delete <vm> <n>  Delete a snapshot
+qcli snapshot list <vm>        List snapshots
+qcli snapshot create <vm>      Create a snapshot
+qcli snapshot restore <vm> <n> Restore a snapshot
+qcli snapshot delete <vm> <n>  Delete a snapshot
 
-qemu-cli backup list <vm>          List backups
-qemu-cli backup create <vm>        Create a backup
-qemu-cli backup restore <vm> <id>  Restore from backup
-qemu-cli backup delete <vm> <id>   Delete a backup
+qcli backup list <vm>          List backups
+qcli backup create <vm>        Create a backup
+qcli backup restore <vm> <id>  Restore from backup
+qcli backup delete <vm> <id>   Delete a backup
 
-qemu-cli storage-pool list         List storage pools
-qemu-cli image list                List cloud images
+qcli storage-pool list         List storage pools
+qcli image list                List cloud images
 
-qemu-cli firewall list             List banned IPs
-qemu-cli firewall ban <ip>         Ban an IP
-qemu-cli firewall unban <ip>       Unban an IP
-qemu-cli firewall check <ip>       Check if IP is banned
-qemu-cli firewall jails            Show Fail2Ban jail config
-qemu-cli firewall set-jail <jail>  Update jail settings
-qemu-cli firewall log              View Fail2Ban log
+qcli firewall list             List banned IPs
+qcli firewall ban <ip>         Ban an IP
+qcli firewall unban <ip>       Unban an IP
+qcli firewall check <ip>       Check if IP is banned
+qcli firewall jails            Show Fail2Ban jail config
+qcli firewall set-jail <jail>  Update jail settings
+qcli firewall log              View Fail2Ban log
 
-qemu-cli tenant list               List tenants
-qemu-cli tenant use <id|name>      Select active tenant
-qemu-cli tenant public-ips         List assigned public IPs
-qemu-cli tenant set-email <email>  Set notification email
-qemu-cli tenant assign-public-ips  Assign free public IPs (admin)
+qcli tenant list               List tenants
+qcli tenant use <id|name>      Select active tenant
+qcli tenant public-ips         List assigned public IPs
+qcli tenant set-email <email>  Set notification email
+qcli tenant assign-public-ips  Assign free public IPs (admin)
 
-qemu-cli network list              List NAT/Internal networks
-qemu-cli network create <name>     Create NAT or Internal network
-qemu-cli network update <id>       Update network settings
-qemu-cli network delete <id>       Delete a network
+qcli network list              List NAT/Internal networks
+qcli network create <name>     Create NAT or Internal network
+qcli network update <id>       Update network settings
+qcli network delete <id>       Delete a network
 
-qemu-cli ip-pool list              List IP pools
-qemu-cli ip-pool available         Free public IPs (admin)
+qcli ip-pool list              List IP pools
+qcli ip-pool available         Free public IPs (admin)
 
-qemu-cli user list                 List users
+qcli user list                 List users
 
-qemu-cli server-info               Show host CPU/RAM/Disk
-qemu-cli version                   Show CLI version
-qemu-cli completion zsh            Shell completion script
+qcli server-info               Show host CPU/RAM/Disk
+qcli version                   Show CLI version
+qcli completion zsh            Shell completion script
 ```
 
 ## Output Formats
 
 ```bash
-qemu-cli vm list
-qemu-cli -o json vm list
-qemu-cli -o yaml vm describe my-webserver
+qcli vm list
+qcli -o json vm list
+qcli -o yaml vm describe my-webserver
 ```
 
 ## Multiple Servers
 
 ```bash
-qemu-cli context create production --url https://panel.example.com --token qiqi_...
-qemu-cli context create staging --url https://staging.example.com --token qiqi_...
+qcli context create production --url https://panel.example.com --token qiqi_...
+qcli context create staging --url https://staging.example.com --token qiqi_...
 
-qemu-cli context use production
-qemu-cli vm list
+qcli context use production
+qcli vm list
 ```
 
 ## Partial IDs and Names
 
 ```bash
-qemu-cli vm start 8b859dca-b3d5-4f8a-8a19-ae403426073e
-qemu-cli vm start 8b859
-qemu-cli vm start my-webserver
+qcli vm start 8b859dca-b3d5-4f8a-8a19-ae403426073e
+qcli vm start 8b859
+qcli vm start my-webserver
 ```
 
 ## Creating VMs
 
 ```bash
 # Public IP assigned to the tenant
-qemu-cli vm create my-webserver \
+qcli vm create my-webserver \
   --image "Ubuntu 24.04" \
   --project <project-id> \
   --public-ip 159.69.172.28 \
   --random-password
 
 # Or pick a reserved allocation UUID
-qemu-cli vm create my-webserver \
+qcli vm create my-webserver \
   --image "Ubuntu 24.04" \
   --project <project-id> \
   --ip-allocation <uuid> \
   --random-password
 
 # NAT / Internal network via IP pool
-qemu-cli vm create my-webserver \
+qcli vm create my-webserver \
   --image "Ubuntu 24.04" \
   --project <project-id> \
   --ip-pool <ip-pool-id> \
@@ -203,15 +203,15 @@ qemu-cli vm create my-webserver \
 ## Networks & public IPs
 
 ```bash
-qemu-cli network create web-dmz --type nat
-qemu-cli network create db --type internal --network 10.42.0.0/24 --gateway 10.42.0.1
-qemu-cli network list
-qemu-cli network update <id> --dhcp=false
+qcli network create web-dmz --type nat
+qcli network create db --type internal --network 10.42.0.0/24 --gateway 10.42.0.1
+qcli network list
+qcli network update <id> --dhcp=false
 
-qemu-cli tenant public-ips
-qemu-cli ip-pool available
-qemu-cli tenant assign-public-ips Default --allocation-id <uuid> --allocation-id <uuid>
-qemu-cli tenant set-email ops@example.com
+qcli tenant public-ips
+qcli ip-pool available
+qcli tenant assign-public-ips Default --allocation-id <uuid> --allocation-id <uuid>
+qcli tenant set-email ops@example.com
 ```
 
 ## Tenant isolation
@@ -220,7 +220,7 @@ API keys authenticate as a panel user. Non-superadmin users only see their tenan
 
 ## Configuration
 
-Stored in `~/.qemu-cli/config.json` (mode `0600`):
+Stored in `~/.qcli/config.json` (mode `0600`). Existing `~/.qemu-cli/config.json` is migrated automatically on first run:
 
 ```json
 {
@@ -239,9 +239,9 @@ Stored in `~/.qemu-cli/config.json` (mode `0600`):
 ## Shell Completion
 
 ```bash
-qemu-cli completion zsh > "${fpath[1]}/_qemu-cli"
-qemu-cli completion bash > /etc/bash_completion.d/qemu-cli
-qemu-cli completion fish > ~/.config/fish/completions/qemu-cli.fish
+qcli completion zsh > "${fpath[1]}/_qcli"
+qcli completion bash > /etc/bash_completion.d/qcli
+qcli completion fish > ~/.config/fish/completions/qcli.fish
 ```
 
 ## Related

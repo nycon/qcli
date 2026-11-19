@@ -5,21 +5,21 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/output"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/output"
 )
 
 var storagePoolCmd = &cobra.Command{
 	Use:   "storage-pool",
 	Short: "Manage storage pools",
-	Example: `  qemu-cli storage-pool list`,
+	Example: `  qcli storage-pool list`,
 }
 
 var imageCmd = &cobra.Command{
 	Use:   "image",
 	Short: "Manage cloud images",
-	Example: `  qemu-cli image list
-  qemu-cli -o json image list`,
+	Example: `  qcli image list
+  qcli -o json image list`,
 }
 
 func init() {

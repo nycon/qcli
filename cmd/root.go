@@ -6,11 +6,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/output"
+	"github.com/nycon/qcli/internal/output"
 )
 
 // Version is set at build time via -ldflags.
-var Version = "1.1.0"
+var Version = "1.2.0"
 
 var (
 	outputFormat string
@@ -18,15 +18,15 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "qemu-cli",
+	Use:   "qcli",
 	Short: "QEMU Interface CLI – manage VMs, snapshots, backups, and security",
-	Long: `qemu-cli talks to a QEMU Interface panel using an API key.
+	Long: `qcli talks to a QEMU Interface panel using an API key.
 
 Examples:
-  qemu-cli context create production --url https://panel.example.com --token qi_...
-  qemu-cli vm list
-  qemu-cli -o json vm list
-  qemu-cli vm start my-webserver`,
+  qcli context create production --url https://panel.example.com --token qi_...
+  qcli vm list
+  qcli -o json vm list
+  qcli vm start my-webserver`,
 	SilenceUsage:  true,
 	SilenceErrors: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {

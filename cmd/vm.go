@@ -11,10 +11,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/config"
-	"github.com/nycon/qemu-cli/internal/output"
-	"github.com/nycon/qemu-cli/internal/resolve"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/config"
+	"github.com/nycon/qcli/internal/output"
+	"github.com/nycon/qcli/internal/resolve"
 )
 
 var vmCmd = &cobra.Command{
@@ -23,10 +23,10 @@ var vmCmd = &cobra.Command{
 	Long: `Manage VMs on the active tenant.
 
 Examples:
-  qemu-cli vm list
-  qemu-cli vm create web1 --image "Ubuntu 24.04" --project <id> --ip-pool <id> --random-password
-  qemu-cli vm start web1
-  qemu-cli vm stop 8b859`,
+  qcli vm list
+  qcli vm create web1 --image "Ubuntu 24.04" --project <id> --ip-pool <id> --random-password
+  qcli vm start web1
+  qcli vm stop 8b859`,
 }
 
 func init() {
@@ -44,8 +44,8 @@ func init() {
 var vmListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all VMs",
-	Example: `  qemu-cli vm list
-  qemu-cli -o json vm list`,
+	Example: `  qcli vm list
+  qcli -o json vm list`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := clientFromActive()
 		if err != nil {
@@ -119,13 +119,13 @@ var vmCreateCmd = &cobra.Command{
 	Use:   "create [name]",
 	Short: "Create a new VM from a cloud image",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli vm create web1 --image "Ubuntu 24.04" --project <uuid> --public-ip 159.69.172.28 --random-password
-  qemu-cli vm create web1 --image "Ubuntu 24.04" --project <uuid> --ip-pool <uuid> --ip-allocation <uuid>
-  qemu-cli vm create db1 --image Debian --project <uuid> --ip-pool <uuid> --cpu 2 --ram 4096 --disk 40 --ssh-key "ssh-ed25519 AAAA..."`,
+	Example: `  qcli vm create web1 --image "Ubuntu 24.04" --project <uuid> --public-ip 159.69.172.28 --random-password
+  qcli vm create web1 --image "Ubuntu 24.04" --project <uuid> --ip-pool <uuid> --ip-allocation <uuid>
+  qcli vm create db1 --image Debian --project <uuid> --ip-pool <uuid> --cpu 2 --ram 4096 --disk 40 --ssh-key "ssh-ed25519 AAAA..."`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
 		if vmImage == "" || vmProject == "" {
-			return fmt.Errorf("missing required flags\n  qemu-cli vm create %s --image <name|id> --project <uuid> --public-ip <ip>|--ip-pool <uuid>", name)
+			return fmt.Errorf("missing required flags\n  qcli vm create %s --image <name|id> --project <uuid> --public-ip <ip>|--ip-pool <uuid>", name)
 		}
 		c, err := clientFromActive()
 		if err != nil {
@@ -149,7 +149,7 @@ var vmCreateCmd = &cobra.Command{
 			allocID = resolvedAlloc
 		}
 		if poolID == "" {
-			return fmt.Errorf("missing network selection\n  qemu-cli vm create %s --image <name|id> --project <uuid> --public-ip <ip>\n  qemu-cli vm create %s --image <name|id> --project <uuid> --ip-pool <uuid>", name, name)
+			return fmt.Errorf("missing network selection\n  qcli vm create %s --image <name|id> --project <uuid> --public-ip <ip>\n  qcli vm create %s --image <name|id> --project <uuid> --ip-pool <uuid>", name, name)
 		}
 
 		imageID, err := resolve.Image(c, vmImage)
@@ -273,17 +273,17 @@ func resolvePublicIPSelection(c *api.Client, tid, publicIP, allocationID string)
 		}
 	}
 	if publicIP != "" {
-		return "", "", fmt.Errorf("public IP %q not found as free/reserved for this tenant\n  qemu-cli tenant public-ips", publicIP)
+		return "", "", fmt.Errorf("public IP %q not found as free/reserved for this tenant\n  qcli tenant public-ips", publicIP)
 	}
-	return "", "", fmt.Errorf("public IP allocation %q not found as free/reserved for this tenant\n  qemu-cli tenant public-ips", allocationID)
+	return "", "", fmt.Errorf("public IP allocation %q not found as free/reserved for this tenant\n  qcli tenant public-ips", allocationID)
 }
 
 var vmDescribeCmd = &cobra.Command{
 	Use:   "describe [id|name]",
 	Short: "Show VM details",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli vm describe my-webserver
-  qemu-cli -o json vm describe 8b859`,
+	Example: `  qcli vm describe my-webserver
+  qcli -o json vm describe 8b859`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := clientFromActive()
 		if err != nil {
@@ -353,24 +353,24 @@ func vmAction(action, idOrName, successMsg string) error {
 
 var vmStartCmd = &cobra.Command{
 	Use: "start [id|name]", Short: "Start a VM", Args: cobra.ExactArgs(1),
-	Example: `  qemu-cli vm start my-webserver`,
+	Example: `  qcli vm start my-webserver`,
 	RunE:    func(cmd *cobra.Command, args []string) error { return vmAction("start", args[0], "VM start initiated") },
 }
 var vmStopCmd = &cobra.Command{
 	Use: "stop [id|name]", Short: "Gracefully stop a VM", Args: cobra.ExactArgs(1),
-	Example: `  qemu-cli vm stop my-webserver`,
+	Example: `  qcli vm stop my-webserver`,
 	RunE:    func(cmd *cobra.Command, args []string) error { return vmAction("stop", args[0], "VM stop initiated") },
 }
 var vmRebootCmd = &cobra.Command{
 	Use: "reboot [id|name]", Short: "Reboot a VM", Args: cobra.ExactArgs(1),
-	Example: `  qemu-cli vm reboot my-webserver`,
+	Example: `  qcli vm reboot my-webserver`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return vmAction("reboot", args[0], "VM reboot initiated")
 	},
 }
 var vmPoweroffCmd = &cobra.Command{
 	Use: "poweroff [id|name]", Short: "Force power-off a VM", Args: cobra.ExactArgs(1),
-	Example: `  qemu-cli vm poweroff my-webserver`,
+	Example: `  qcli vm poweroff my-webserver`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return vmAction("force_stop", args[0], "VM powered off")
 	},
@@ -386,8 +386,8 @@ var vmDeleteCmd = &cobra.Command{
 	Use:   "delete [id|name]",
 	Short: "Delete a VM permanently",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli vm delete old-box --yes
-  qemu-cli vm delete old-box --dry-run`,
+	Example: `  qcli vm delete old-box --yes
+  qcli vm delete old-box --dry-run`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := clientFromActive()
 		if err != nil {
@@ -443,8 +443,8 @@ var vmResizeCmd = &cobra.Command{
 	Use:   "resize [id|name]",
 	Short: "Resize a stopped VM",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli vm resize web1 --cpu 4 --ram 8192
-  qemu-cli vm resize web1 --disk 50`,
+	Example: `  qcli vm resize web1 --cpu 4 --ram 8192
+  qcli vm resize web1 --disk 50`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		payload := map[string]any{}
 		if cmd.Flags().Changed("cpu") {
@@ -457,7 +457,7 @@ var vmResizeCmd = &cobra.Command{
 			payload["disk_size_gb"] = vmResizeDisk
 		}
 		if len(payload) == 0 {
-			return fmt.Errorf("specify --cpu, --ram, or --disk\n  qemu-cli vm resize %s --cpu 2 --ram 4096", args[0])
+			return fmt.Errorf("specify --cpu, --ram, or --disk\n  qcli vm resize %s --cpu 2 --ram 4096", args[0])
 		}
 		c, err := clientFromActive()
 		if err != nil {

@@ -6,17 +6,17 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/output"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/output"
 )
 
 var firewallCmd = &cobra.Command{
 	Use:   "firewall",
 	Short: "IP blacklist & Fail2Ban",
-	Example: `  qemu-cli firewall list
-  qemu-cli firewall ban 1.2.3.4 --reason "Portscan"
-  qemu-cli firewall unban 1.2.3.4
-  qemu-cli firewall set-jail sshd --bantime 86400`,
+	Example: `  qcli firewall list
+  qcli firewall ban 1.2.3.4 --reason "Portscan"
+  qcli firewall unban 1.2.3.4
+  qcli firewall set-jail sshd --bantime 86400`,
 }
 
 func init() {
@@ -82,7 +82,7 @@ var fwBanCmd = &cobra.Command{
 	Use:   "ban [ip]",
 	Short: "Ban an IP address",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli firewall ban 1.2.3.4 --reason "Port scanning"`,
+	Example: `  qcli firewall ban 1.2.3.4 --reason "Port scanning"`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := clientFromActive()
 		if err != nil {
@@ -214,7 +214,7 @@ var fwSetJailCmd = &cobra.Command{
 	Use:   "set-jail [jail]",
 	Short: "Update Fail2Ban jail settings",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli firewall set-jail sshd --bantime 86400`,
+	Example: `  qcli firewall set-jail sshd --bantime 86400`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		payload := map[string]any{"jail": args[0]}
 		changed := false
@@ -231,7 +231,7 @@ var fwSetJailCmd = &cobra.Command{
 			changed = true
 		}
 		if !changed {
-			return fmt.Errorf("specify --bantime, --findtime, or --maxretry\n  qemu-cli firewall set-jail %s --bantime 86400", args[0])
+			return fmt.Errorf("specify --bantime, --findtime, or --maxretry\n  qcli firewall set-jail %s --bantime 86400", args[0])
 		}
 		c, err := clientFromActive()
 		if err != nil {

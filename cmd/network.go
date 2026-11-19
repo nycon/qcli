@@ -6,19 +6,19 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/config"
-	"github.com/nycon/qemu-cli/internal/output"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/config"
+	"github.com/nycon/qcli/internal/output"
 )
 
 var networkCmd = &cobra.Command{
 	Use:   "network",
 	Short: "Manage tenant NAT / Internal networks",
-	Example: `  qemu-cli network list
-  qemu-cli network create web-dmz --type nat
-  qemu-cli network create db --type internal --network 10.42.0.0/24 --gateway 10.42.0.1
-  qemu-cli network update <id> --name dmz2 --dhcp=false
-  qemu-cli network delete <id> --yes`,
+	Example: `  qcli network list
+  qcli network create web-dmz --type nat
+  qcli network create db --type internal --network 10.42.0.0/24 --gateway 10.42.0.1
+  qcli network update <id> --name dmz2 --dhcp=false
+  qcli network delete <id> --yes`,
 }
 
 var (
@@ -66,8 +66,8 @@ func init() {
 var networkListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List NAT/Internal networks for the active tenant",
-	Example: `  qemu-cli network list
-  qemu-cli -o json network list`,
+	Example: `  qcli network list
+  qcli -o json network list`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, tid, err := clientWithTenant()
 		if err != nil {
@@ -110,8 +110,8 @@ var networkCreateCmd = &cobra.Command{
 	Use:   "create [name]",
 	Short: "Create a NAT or Internal network",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli network create web-dmz --type nat
-  qemu-cli network create db --type internal --network 10.42.0.0/24 --gateway 10.42.0.1`,
+	Example: `  qcli network create web-dmz --type nat
+  qcli network create db --type internal --network 10.42.0.0/24 --gateway 10.42.0.1`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
 		t := strings.ToLower(strings.TrimSpace(netType))
@@ -166,8 +166,8 @@ var networkUpdateCmd = &cobra.Command{
 	Use:   "update [id]",
 	Short: "Update a tenant NAT/Internal network",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli network update a1b2c3d4 --name dmz2
-  qemu-cli network update a1b2c3d4 --dhcp=false`,
+	Example: `  qcli network update a1b2c3d4 --name dmz2
+  qcli network update a1b2c3d4 --dhcp=false`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, tid, err := clientWithTenant()
 		if err != nil {
@@ -227,7 +227,7 @@ var networkDeleteCmd = &cobra.Command{
 	Use:     "delete [id]",
 	Short:   "Delete a tenant NAT/Internal network",
 	Args:    cobra.ExactArgs(1),
-	Example: `  qemu-cli network delete a1b2c3d4 --yes`,
+	Example: `  qcli network delete a1b2c3d4 --yes`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, tid, err := clientWithTenant()
 		if err != nil {
@@ -284,7 +284,7 @@ func resolveTenantNetwork(c *api.Client, tid, ref string) (string, error) {
 		return matches[0], nil
 	}
 	if len(matches) == 0 {
-		return "", fmt.Errorf("network not found: %s\n  qemu-cli network list", ref)
+		return "", fmt.Errorf("network not found: %s\n  qcli network list", ref)
 	}
-	return "", fmt.Errorf("ambiguous network %q (%d matches)\n  qemu-cli network list", ref, len(matches))
+	return "", fmt.Errorf("ambiguous network %q (%d matches)\n  qcli network list", ref, len(matches))
 }

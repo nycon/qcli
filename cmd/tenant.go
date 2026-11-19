@@ -6,20 +6,20 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/config"
-	"github.com/nycon/qemu-cli/internal/output"
-	"github.com/nycon/qemu-cli/internal/resolve"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/config"
+	"github.com/nycon/qcli/internal/output"
+	"github.com/nycon/qcli/internal/resolve"
 )
 
 var tenantCmd = &cobra.Command{
 	Use:   "tenant",
 	Short: "Manage tenants",
-	Example: `  qemu-cli tenant list
-  qemu-cli tenant use Default
-  qemu-cli tenant public-ips
-  qemu-cli tenant set-email ops@example.com
-  qemu-cli tenant assign-public-ips Default --allocation-id <uuid> --allocation-id <uuid>`,
+	Example: `  qcli tenant list
+  qcli tenant use Default
+  qcli tenant public-ips
+  qcli tenant set-email ops@example.com
+  qcli tenant assign-public-ips Default --allocation-id <uuid> --allocation-id <uuid>`,
 }
 
 var (
@@ -89,7 +89,7 @@ var tenantUseCmd = &cobra.Command{
 	Use:     "use [id|name]",
 	Short:   "Select the active tenant",
 	Args:    cobra.ExactArgs(1),
-	Example: `  qemu-cli tenant use Default`,
+	Example: `  qcli tenant use Default`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := clientFromActive()
 		if err != nil {
@@ -112,8 +112,8 @@ var tenantUseCmd = &cobra.Command{
 var tenantPublicIPsCmd = &cobra.Command{
 	Use:   "public-ips",
 	Short: "List public IPs assigned to the active tenant",
-	Example: `  qemu-cli tenant public-ips
-  qemu-cli -o json tenant public-ips`,
+	Example: `  qcli tenant public-ips
+  qcli -o json tenant public-ips`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, tid, err := clientWithTenant()
 		if err != nil {
@@ -153,9 +153,9 @@ var tenantSetEmailCmd = &cobra.Command{
 	Use:   "set-email [email]",
 	Short: "Set the tenant notification email for the active tenant",
 	Args:  cobra.MaximumNArgs(1),
-	Example: `  qemu-cli tenant set-email ops@example.com
-  qemu-cli tenant set-email --email ops@example.com
-  qemu-cli tenant set-email ""`,
+	Example: `  qcli tenant set-email ops@example.com
+  qcli tenant set-email --email ops@example.com
+  qcli tenant set-email ""`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		email := tenantEmail
 		if len(args) == 1 {
@@ -190,11 +190,11 @@ var tenantAssignPublicIPsCmd = &cobra.Command{
 	Use:   "assign-public-ips [tenant]",
 	Short: "Assign concrete public IPs to a tenant (superadmin)",
 	Args:  cobra.ExactArgs(1),
-	Example: `  qemu-cli tenant assign-public-ips Default --allocation-id <uuid> --allocation-id <uuid>
-  qemu-cli tenant assign-public-ips Default --clear`,
+	Example: `  qcli tenant assign-public-ips Default --allocation-id <uuid> --allocation-id <uuid>
+  qcli tenant assign-public-ips Default --clear`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if !tenantClearPublicIPs && len(tenantAllocIDs) == 0 {
-			return fmt.Errorf("pass --allocation-id (repeatable) or --clear\n  qemu-cli tenant assign-public-ips %s --allocation-id <uuid>", args[0])
+			return fmt.Errorf("pass --allocation-id (repeatable) or --clear\n  qcli tenant assign-public-ips %s --allocation-id <uuid>", args[0])
 		}
 		c, err := clientFromActive()
 		if err != nil {

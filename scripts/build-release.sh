@@ -15,17 +15,17 @@ targets=(
   "windows/amd64"
 )
 
-echo "Building qemu-cli ${VERSION}..."
+echo "Building qcli ${VERSION}..."
 for t in "${targets[@]}"; do
   GOOS="${t%/*}"
   GOARCH="${t#*/}"
   EXT=""
   [[ "$GOOS" == "windows" ]] && EXT=".exe"
-  NAME="qemu-cli_${VERSION}_${GOOS}_${GOARCH}${EXT}"
+  NAME="qcli_${VERSION}_${GOOS}_${GOARCH}${EXT}"
   echo "  -> ${NAME}"
   CGO_ENABLED=0 GOOS="$GOOS" GOARCH="$GOARCH" go build \
     -trimpath \
-    -ldflags "-s -w -X github.com/nycon/qemu-cli/cmd.Version=${VERSION}" \
+    -ldflags "-s -w -X github.com/nycon/qcli/cmd.Version=${VERSION}" \
     -o "${OUT}/${NAME}" \
     "$ROOT"
 

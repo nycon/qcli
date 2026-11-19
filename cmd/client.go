@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/nycon/qemu-cli/internal/api"
-	"github.com/nycon/qemu-cli/internal/config"
+	"github.com/nycon/qcli/internal/api"
+	"github.com/nycon/qcli/internal/config"
 )
 
 // clientFromActive returns an API client, honoring --insecure for this invocation.
